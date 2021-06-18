@@ -1,4 +1,4 @@
-# ImageLoader
+# ImageLoader&nbsp;&nbsp;![HarmonyOS](https://img.shields.io/badge/-HarmonyOS-red)
 An image loading and caching library for HarmonyOS based applications.
 
 ## Download
