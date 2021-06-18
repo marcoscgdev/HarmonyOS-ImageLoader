@@ -1,0 +1,34 @@
+{
+  "app": {
+    "bundleName": "com.marcoscg.ohos.imageloadersample",
+    "vendor": "marcoscg",
+    "version": {
+      "code": 1,
+      "name": "1.0"
+    },
+    "apiVersion": {
+      "compatible": 4,
+      "target": 5,
+      "releaseType": "Beta1"
+    }
+  },
+  "deviceConfig": {
+  },
+  "module": {
+    "package": "com.marcoscg.ohos.imageloader",
+    "deviceType": [
+      "phone", "tablet", "wearable", "tv", "car"
+    ],
+    "distro": {
+      "deliveryWithInstall": true,
+      "moduleName": "library",
+      "moduleType": "har",
+      "installationFree": true
+    },
+    "reqPermissions": [
+      {
+        "name": "ohos.permission.INTERNET"
+      }
+    ]
+  }
+}
