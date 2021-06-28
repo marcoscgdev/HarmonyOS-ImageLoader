@@ -21,13 +21,18 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 public class ImageLoader {
+
+    private static final String CACHED_IMAGES_PATH = "cached_images/";
 
     private final AbilityContext ability;
     private String url;
     private Image image;
     private boolean cacheEnabled = true;
+    private int validCacheDays = -1;
 
     public static ImageLoader with(AbilityContext ability) {
         return new ImageLoader(ability);
@@ -44,6 +49,11 @@ public class ImageLoader {
 
     public ImageLoader disableCache() {
         cacheEnabled = false;
+        return this;
+    }
+
+    public ImageLoader setValidCacheDays(int validCacheDays) {
+        this.validCacheDays = validCacheDays;
         return this;
     }
 
@@ -81,9 +91,10 @@ public class ImageLoader {
     }
 
     private ImageSource getCachedImageSource() throws IOException {
-        File cachedFile = new File(ability.getCacheDir(), getCacheFileName(url));
+        File cachedFile = new File(ability.getCacheDir(),
+                CACHED_IMAGES_PATH + getCacheFileName(url));
 
-        if (!cachedFile.exists()) {
+        if (!cachedFile.exists() || !isValidCache(cachedFile)) {
             Files.copy(new URL(url).openStream(), cachedFile.toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
         }
@@ -93,6 +104,15 @@ public class ImageLoader {
 
     private ImageSource getRemoteImageSource() throws IOException {
         return ImageSource.create(new URL(url).openStream(), null);
+    }
+
+    private boolean isValidCache(File cachedFile) {
+        Date date1 = new Date(cachedFile.lastModified());
+        Date date2 = new Date();
+
+        long days = ChronoUnit.DAYS.between(date1.toInstant(), date2.toInstant());
+
+        return validCacheDays == -1 || days <= validCacheDays;
     }
 
     private String getCacheFileName(String url) {

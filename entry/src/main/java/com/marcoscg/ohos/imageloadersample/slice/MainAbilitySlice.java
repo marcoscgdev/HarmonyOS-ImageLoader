@@ -21,6 +21,7 @@ public class MainAbilitySlice extends AbilitySlice {
 
         ImageLoader.with(this)
                 .load(imageUrl)
+                .setValidCacheDays(7) // Cache will be valid for the next 7 days
                 .into(image);
     }
 
