@@ -62,6 +62,21 @@ public class ImageLoader {
         loadImage();
     }
 
+    public void clearCache() {
+        File cacheDir = new File(ability.getCacheDir(), CACHED_IMAGES_PATH);
+
+        if (!cacheDir.exists() || !cacheDir.isDirectory()) {
+            return;
+        }
+
+        String[] images = cacheDir.list();
+
+        for (String image : images) {
+            File currentFile = new File(cacheDir.getPath(), image);
+            currentFile.delete();
+        }
+    }
+
     private void loadImage() {
         ability.getGlobalTaskDispatcher(TaskPriority.DEFAULT).asyncDispatch(new Runnable() {
             @Override
@@ -93,6 +108,10 @@ public class ImageLoader {
     private ImageSource getCachedImageSource() throws IOException {
         File cachedFile = new File(ability.getCacheDir(),
                 CACHED_IMAGES_PATH + getCacheFileName(url));
+
+        if (!cachedFile.getParentFile().exists()) {
+            cachedFile.getParentFile().mkdir();
+        }
 
         if (!cachedFile.exists() || !isValidCache(cachedFile)) {
             Files.copy(new URL(url).openStream(), cachedFile.toPath(),
