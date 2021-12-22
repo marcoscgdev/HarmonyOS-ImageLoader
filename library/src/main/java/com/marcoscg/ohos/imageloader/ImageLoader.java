@@ -82,7 +82,7 @@ public class ImageLoader {
             @Override
             public void run() {
                 ImageSource.DecodingOptions decodingOpts = new ImageSource.DecodingOptions();
-                decodingOpts.desiredSize = new Size(image.getWidth(), image.getHeight());
+                //decodingOpts.desiredSize = new Size(image.getWidth(), image.getHeight());
 
                 try {
                     ImageSource imageSource = cacheEnabled ? getCachedImageSource() : getRemoteImageSource();
