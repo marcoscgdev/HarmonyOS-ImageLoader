@@ -3,8 +3,8 @@
     "bundleName": "com.marcoscg.ohos.imageloadersample",
     "vendor": "marcoscg",
     "version": {
-      "code": 2,
-      "name": "1.1"
+      "code": 1002,
+      "name": "0.1.2"
     },
     "apiVersion": {
       "compatible": 4,
