@@ -82,21 +82,28 @@ public class ImageLoader {
             @Override
             public void run() {
                 ImageSource.DecodingOptions decodingOpts = new ImageSource.DecodingOptions();
-                //decodingOpts.desiredSize = new Size(image.getWidth(), image.getHeight());
 
                 try {
                     ImageSource imageSource = cacheEnabled ? getCachedImageSource() : getRemoteImageSource();
+                    Size sourceImageSize = imageSource.getImageInfo().size;
+                    int maxSize = Math.max(image.getWidth(), image.getHeight());
+
+                    if (sourceImageSize.width >= sourceImageSize.height) {
+                        // Landscape
+                        int width = (sourceImageSize.width * maxSize) / sourceImageSize.height;
+                        decodingOpts.desiredSize = new Size(width, maxSize);
+                    } else {
+                        // Portrait
+                        int height = (sourceImageSize.height * maxSize) / sourceImageSize.width;
+                        decodingOpts.desiredSize = new Size(maxSize, height);
+                    }
 
                     PixelMap pixelMap = imageSource.createPixelmap(decodingOpts);
                     imageSource.release();
 
-                    ability.getUITaskDispatcher().asyncDispatch(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            image.setPixelMap(pixelMap);
-                            pixelMap.release();
-                        }
+                    ability.getUITaskDispatcher().asyncDispatch(() -> {
+                        image.setPixelMap(pixelMap);
+                        pixelMap.release();
                     });
                 } catch (IOException e) {
                     e.printStackTrace();
